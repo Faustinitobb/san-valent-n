@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Chaparrita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Pantalla 1: Inicio */
+        #pantalla1 {
+            background-color: #0000ff; /* Azul solicitado */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            z-index: 10;
+        }
+
+        h1 { color: #ff0000; font-size: 1.2rem; padding: 20px; line-height: 1.6; }
+        .instruccion { color: white; font-size: 0.6rem; margin-top: 20px; animation: parpadeo 1s infinite; }
+
+        /* Pantalla 2: Pregunta */
+        #pantalla2 {
+            background-color: #ffc0cb; /* Rosa */
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+        /* Pantalla 3: Final */
+        #pantalla3 {
+            background-color: #ffc0cb;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .banner {
+            background: white;
+            border: 4px solid red;
+            padding: 20px;
+            max-width: 90%;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .pregunta-texto { color: red; font-size: 0.8rem; margin-bottom: 20px; }
+        .mensaje-final { color: #ff0000; font-size: 0.5rem; line-height: 1.8; text-align: justify; margin-top: 15px; }
+
+        .botones { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
+        button {
+            padding: 15px 25px;
+            font-family: 'Press Start 2P', cursive;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        #btnSi { background-color: #00ff00; color: black; }
+        #btnNo { background-color: #ff0000; color: white; position: relative; }
+
+        /* Lluvia de corazones */
+        .corazon {
+            position: absolute;
+            color: red;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: caer linear forwards;
+        }
+
+        @keyframes caer {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; }
+        }
+
+        /* Animación de transición */
+        .fade-out { animation: fadeOut 0.5s forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    </style>
+</head>
+<body onclick="continuar()" onkeydown="continuar()">
+
+    <div id="pantalla1">
+        <h1>14 DE FEBRERO CHAPARRITA</h1>
+        <p class="instruccion">PULSA CUALQUIER TECLA O TOCA LA PANTALLA PARA CONTINUAR</p>
+    </div>
+
+    <div id="pantalla2">
+        <div class="banner">
+            <p class="pregunta-texto">¿Quieres ser mi San Valentin?</p>
+            <div class="botones">
+                <button id="btnSi" onclick="aceptar(event)">SÍ</button>
+                <button id="btnNo" onmouseover="moverBoton(this)" onclick="moverBoton(this)">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantalla3">
+        <div class="banner">
+            <p class="pregunta-texto" style="font-size: 1rem;">¡Gracias por aceptar!</p>
+            <p class="mensaje-final">
+                Eres la novia más bonita del mundo, tal vez no tenga detalles hechos a mano como muchos otros, pero esto es con todo el corazón para ti y lo puedes llevar a todos lados.<br><br>
+                Quiero que sepas que te amo demasiado y de verdad agradecerte por todo este tiempo a mi lado. <br><br>
+                Y que aunque ya seamos pareja y sepamos que el 14 la pasaremos juntos, no quiero perder el detalle de aun así pedirte que seas mi compañera en este día.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Lluvia de corazones continua
+        setInterval(() => {
+            const c = document.createElement('div');
+            c.innerHTML = '❤️';
+            c.classList.add('corazon');
+            c.style.left = Math.random() * 100 + "vw";
+            c.style.animationDuration = Math.random() * 3 + 2 + "s";
+            document.body.appendChild(c);
+            setTimeout(() => { c.remove(); }, 5000);
+        }, 300);
+
+        function continuar() {
+            const p1 = document.getElementById('pantalla1');
+            const p2 = document.getElementById('pantalla2');
+            if (p1.style.display !== 'none') {
+                p1.classList.add('fade-out');
+                setTimeout(() => {
+                    p1.style.display = 'none';
+                    p2.style.display = 'flex';
+                }, 500);
+            }
+        }
+
+        function moverBoton(btn) {
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.position = 'absolute';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function aceptar(e) {
+            e.stopPropagation(); // Evita que el click se propague
+            
+            // Efecto "Fuegos artificiales" de corazones
+            for(let i=0; i<20; i++) {
+                crearExplosion();
+            }
+
+            setTimeout(() => {
+                document.getElementById('pantalla2').style.display = 'none';
+                document.getElementById('pantalla3').style.display = 'flex';
+            }, 500);
+        }
+
+        function crearExplosion() {
+            const c = document.createElement('div');
+            c.innerHTML = '💖';
+            c.style.position = 'absolute';
+            c.style.left = '50%';
+            c.style.top = '50%';
+            c.style.fontSize = '30px';
+            c.style.transition = 'all 1s ease-out';
+            document.body.appendChild(c);
+
+            const destX = (Math.random() - 0.5) * 500;
+            const destY = (Math.random() - 0.5) * 500;
+
+            setTimeout(() => {
+                c.style.transform = `translate(${destX}px, ${destY}px) scale(0)`;
+                c.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => { c.remove(); }, 1000);
+        }
+    </script>
+</body>
+</html>
