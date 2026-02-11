@@ -7,105 +7,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Press Start 2P', cursive;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; font-family: 'Press Start 2P', cursive;
+            background-color: #0000ff; /* Fondo azul inicial */
+            transition: background-color 0.5s ease;
         }
 
-        /* Pantalla 1: Inicio */
-        #pantalla1 {
-            background-color: #0000ff; /* Azul solicitado */
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            z-index: 10;
+        #pantalla1, #pantalla2, #pantalla3 {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; position: absolute; top: 0; left: 0;
         }
 
-        h1 { color: #ff0000; font-size: 1.2rem; padding: 20px; line-height: 1.6; }
-        .instruccion { color: white; font-size: 0.6rem; margin-top: 20px; animation: parpadeo 1s infinite; }
+        #pantalla1 { z-index: 10; }
+        #pantalla2 { background-color: #ffc0cb; display: none; z-index: 9; }
+        #pantalla3 { background-color: #ffc0cb; display: none; padding: 20px; box-sizing: border-box; z-index: 11; }
 
-        /* Pantalla 2: Pregunta */
-        #pantalla2 {
-            background-color: #ffc0cb; /* Rosa */
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-        }
-
-        /* Pantalla 3: Final */
-        #pantalla3 {
-            background-color: #ffc0cb;
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+        h1 { color: #ff0000; font-size: 1.1rem; padding: 20px; line-height: 1.6; z-index: 20; text-shadow: 2px 2px #fff; }
+        .instruccion { color: white; font-size: 0.5rem; margin-top: 20px; animation: parpadeo 1s infinite; z-index: 20; }
 
         .banner {
-            background: white;
-            border: 4px solid red;
-            padding: 20px;
-            max-width: 90%;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+            background: white; border: 4px solid red;
+            padding: 20px; max-width: 85%; z-index: 20;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
         }
 
-        .pregunta-texto { color: red; font-size: 0.8rem; margin-bottom: 20px; }
-        .mensaje-final { color: #ff0000; font-size: 0.5rem; line-height: 1.8; text-align: justify; margin-top: 15px; }
+        .pregunta-texto { color: red; font-size: 0.7rem; margin-bottom: 20px; line-height: 1.4; }
+        .mensaje-final { color: #ff0000; font-size: 0.45rem; line-height: 1.7; text-align: justify; margin-top: 15px; }
 
-        .botones { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
+        .botones { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
         button {
-            padding: 15px 25px;
-            font-family: 'Press Start 2P', cursive;
-            border: none;
-            cursor: pointer;
-            font-size: 0.7rem;
+            padding: 12px 20px; font-family: 'Press Start 2P', cursive;
+            border: none; cursor: pointer; font-size: 0.6rem; outline: none;
         }
-        #btnSi { background-color: #00ff00; color: black; }
-        #btnNo { background-color: #ff0000; color: white; position: relative; }
+        #btnSi { background-color: #00ff00; color: black; box-shadow: 4px 4px 0px #008000; }
+        #btnNo { background-color: #ff0000; color: white; position: relative; box-shadow: 4px 4px 0px #800000; }
 
-        /* Lluvia de corazones */
         .corazon {
-            position: absolute;
-            color: red;
-            font-size: 20px;
-            user-select: none;
-            pointer-events: none;
-            animation: caer linear forwards;
+            position: absolute; color: red; font-size: 20px;
+            user-select: none; pointer-events: none;
+            animation: caer linear forwards; z-index: 5;
         }
 
-        @keyframes caer {
-            to { transform: translateY(100vh) rotate(360deg); }
-        }
-
-        @keyframes parpadeo {
-            0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; }
-        }
-
-        /* Animación de transición */
+        @keyframes caer { to { transform: translateY(105vh) rotate(360deg); } }
+        @keyframes parpadeo { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
         .fade-out { animation: fadeOut 0.5s forwards; }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
-<body onclick="continuar()" onkeydown="continuar()">
+<body onload="iniciarLluvia()" onclick="interaccionUsuario()" onkeydown="interaccionUsuario()">
+
+    <audio id="musica" loop preload="auto">
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="pantalla1">
         <h1>14 DE FEBRERO CHAPARRITA</h1>
@@ -117,14 +72,14 @@
             <p class="pregunta-texto">¿Quieres ser mi San Valentin?</p>
             <div class="botones">
                 <button id="btnSi" onclick="aceptar(event)">SÍ</button>
-                <button id="btnNo" onmouseover="moverBoton(this)" onclick="moverBoton(this)">NO</button>
+                <button id="btnNo" onmouseover="moverBoton(this)" onclick="moverBoton(this)" ontouchstart="moverBoton(this)">NO</button>
             </div>
         </div>
     </div>
 
     <div id="pantalla3">
         <div class="banner">
-            <p class="pregunta-texto" style="font-size: 1rem;">¡Gracias por aceptar!</p>
+            <p class="pregunta-texto" style="font-size: 0.9rem;">¡Gracias por aceptar!</p>
             <p class="mensaje-final">
                 Eres la novia más bonita del mundo, tal vez no tenga detalles hechos a mano como muchos otros, pero esto es con todo el corazón para ti y lo puedes llevar a todos lados.<br><br>
                 Quiero que sepas que te amo demasiado y de verdad agradecerte por todo este tiempo a mi lado. <br><br>
@@ -134,25 +89,32 @@
     </div>
 
     <script>
-        // Lluvia de corazones continua
-        setInterval(() => {
-            const c = document.createElement('div');
-            c.innerHTML = '❤️';
-            c.classList.add('corazon');
-            c.style.left = Math.random() * 100 + "vw";
-            c.style.animationDuration = Math.random() * 3 + 2 + "s";
-            document.body.appendChild(c);
-            setTimeout(() => { c.remove(); }, 5000);
-        }, 300);
+        function iniciarLluvia() {
+            setInterval(() => {
+                const c = document.createElement('div');
+                c.innerHTML = '❤️';
+                c.classList.add('corazon');
+                c.style.left = Math.random() * 100 + "vw";
+                c.style.top = "-5vh";
+                c.style.animationDuration = Math.random() * 3 + 2 + "s";
+                document.body.appendChild(c);
+                setTimeout(() => { c.remove(); }, 5500);
+            }, 300);
+        }
 
-        function continuar() {
+        function interaccionUsuario() {
+            const musica = document.getElementById('musica');
+            musica.play().catch(e => console.log("Audio esperando interacción"));
+
             const p1 = document.getElementById('pantalla1');
             const p2 = document.getElementById('pantalla2');
+            
             if (p1.style.display !== 'none') {
                 p1.classList.add('fade-out');
                 setTimeout(() => {
                     p1.style.display = 'none';
                     p2.style.display = 'flex';
+                    document.body.style.backgroundColor = "#ffc0cb"; 
                 }, 500);
             }
         }
@@ -166,38 +128,29 @@
         }
 
         function aceptar(e) {
-            e.stopPropagation(); // Evita que el click se propague
-            
-            // Efecto "Fuegos artificiales" de corazones
-            for(let i=0; i<20; i++) {
-                crearExplosion();
-            }
-
+            e.stopPropagation();
+            for(let i=0; i<30; i++) { crearExplosion(); }
             setTimeout(() => {
                 document.getElementById('pantalla2').style.display = 'none';
                 document.getElementById('pantalla3').style.display = 'flex';
-            }, 500);
+            }, 600);
         }
 
         function crearExplosion() {
             const c = document.createElement('div');
             c.innerHTML = '💖';
             c.style.position = 'absolute';
-            c.style.left = '50%';
-            c.style.top = '50%';
-            c.style.fontSize = '30px';
-            c.style.transition = 'all 1s ease-out';
+            c.style.left = '50%'; c.style.top = '50%';
+            c.style.fontSize = '35px';
+            c.style.transition = 'all 1.2s ease-out';
             document.body.appendChild(c);
-
-            const destX = (Math.random() - 0.5) * 500;
-            const destY = (Math.random() - 0.5) * 500;
-
+            const destX = (Math.random() - 0.5) * 650;
+            const destY = (Math.random() - 0.5) * 650;
             setTimeout(() => {
                 c.style.transform = `translate(${destX}px, ${destY}px) scale(0)`;
                 c.style.opacity = '0';
             }, 50);
-
-            setTimeout(() => { c.remove(); }, 1000);
+            setTimeout(() => { c.remove(); }, 1200);
         }
     </script>
 </body>
